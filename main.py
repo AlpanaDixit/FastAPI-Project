@@ -3,9 +3,9 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get('/blog')
-def index():
+def index(limit):
     # only get 10 published blogs
-    return {'data':'blog list'}
+    return {'data':f'{limit} blogs from the db'}
 
 @app.get('/blog/unplished')
 def unplished():
