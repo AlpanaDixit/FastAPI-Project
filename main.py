@@ -2,8 +2,9 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get('/')
+@app.get('/blog')
 def index():
+    # only get 10 published blogs
     return {'data':'blog list'}
 
 @app.get('/blog/unplished')
