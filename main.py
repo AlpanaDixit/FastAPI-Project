@@ -24,3 +24,8 @@ def show(id: int):
 def comments(id, limit: int = 10):
     return limit
     return {'data': {'1','2'}}
+
+
+@app.post('/blog')
+def create_blog():
+    return {'data': "Blog is created"}
