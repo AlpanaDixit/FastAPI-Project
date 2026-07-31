@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status, Response
 from pydantic import BaseModel
 from . import schemas, models
 from .database import engine, SessionLocal
@@ -16,7 +16,7 @@ def get_db():
     finally:
         db.close()
 
-@app.post('/blog', status_code=201)
+@app.post('/blog', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Blog, db: Session = Depends(get_db)):
 
     new_blog = models.Blog(title = request.title, body = request.body)
@@ -30,9 +30,12 @@ def all(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
-@app.get('/blog/{id}')
-def show(id, db: Session = Depends(get_db)):
-    print("db", db)
+@app.get('/blog/{id}', status_code=200)
+def show(id, response: Response, db: Session = Depends(get_db)):
+    # print("db", db)
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
-    print(blog)
+    # print(blog)
+    if not blog:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'detail': f'Blog with the id {id} is not available'}
     return blog
